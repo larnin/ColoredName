@@ -16,7 +16,7 @@ using Events.Stunt;
 using Events.Local;
 using Events.ClientToAllClients;
 
-namespace CustomDeathMessages
+namespace ColoredName
 {
     public class Configs
     {
@@ -56,29 +56,6 @@ namespace CustomDeathMessages
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        class FormatFlags
-        {
-            public FormatFlags(System.Random r)
-            {
-                bold = r.Next(4) < 1;
-                sup = r.Next(8) < 1;
-                sub = r.Next(8) < 1;
-                underlined = r.Next(4) < 1;
-                italic = r.Next(4) < 1;
-                strike = r.Next(4) < 1;
-                if (!sup && !sub)
-                    supSub = r.Next(4) < 1;
-            }
-
-            public bool bold;
-            public bool sup;
-            public bool sub;
-            public bool underlined;
-            public bool italic;
-            public bool strike;
-            public bool supSub;
-        }
-
         [HarmonyPatch(typeof(ClientPlayerInfo), "GetChatName")]
         internal class ClientPlayerInfoGetChatName
         {
@@ -113,6 +90,29 @@ namespace CustomDeathMessages
 
                 return false;
             }
+        }
+        
+        class FormatFlags
+        {
+            public FormatFlags(System.Random r)
+            {
+                bold = r.Next(4) < 1;
+                sup = r.Next(8) < 1;
+                sub = r.Next(8) < 1;
+                underlined = r.Next(4) < 1;
+                italic = r.Next(4) < 1;
+                strike = r.Next(4) < 1;
+                if (!sup && !sub)
+                    supSub = r.Next(4) < 1;
+            }
+
+            public bool bold;
+            public bool sup;
+            public bool sub;
+            public bool underlined;
+            public bool italic;
+            public bool strike;
+            public bool supSub;
         }
 
         public static string colorizeText(string name)

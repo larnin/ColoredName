@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace CustomDeathMessages
+namespace ColoredName
 {
     static class Message
     {
