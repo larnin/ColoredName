@@ -1,1 +1,1 @@
-ColoredName
+# Colored name
