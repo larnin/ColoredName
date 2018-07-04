@@ -20,8 +20,8 @@ namespace ColoredName
 {
     public class Configs
     {
-        public bool colorizeName;
-        public bool colorizeMessage;
+        public bool colorizeName = true;
+        public bool colorizeMessage = false;
 
         public Configs()
         {
@@ -56,33 +56,14 @@ namespace ColoredName
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        [HarmonyPatch(typeof(ClientPlayerInfo), "GetChatName")]
-        internal class ClientPlayerInfoGetChatName
-        {
-            static bool Prefix(ClientPlayerInfo __instance, ref string result, string originalColorHex)
-            {
-                var name = Entry.colorizeText(__instance.Username_);
-
-                result =  string.Concat(new string[]
-                {
-                    name,
-                    "[",
-                    originalColorHex,
-                    "]"
-                });
-
-                return false;
-            }
-        }
-
         [HarmonyPatch(typeof(ClientLogic), "OnEventSubmitChatMessage")]
         internal class ClientLogicOnEventSubmitChatMessage
         {
             static bool Prefix(ClientLogic __instance, ChatSubmitMessage.Data data)
             {
-                var chatName = __instance.GetType().GetField("GetClientChatName", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(__instance) as string;
+                var chatName = __instance.GetType().GetMethod("GetClientChatName", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, new object[] { }) as string;
                 if (configs.colorizeName)
-                    chatName = colorizeText(chatName);
+                    chatName = colorizeText(NGUIText.StripSymbols(chatName));
 
                 if(data.message_.StartsWith("!") || data.message_.StartsWith("%") || !configs.colorizeMessage)
                     Message.SendMessage(chatName + ": " + data.message_);
