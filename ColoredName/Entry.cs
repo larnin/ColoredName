@@ -67,7 +67,7 @@ namespace ColoredName
 
                 if(data.message_.StartsWith("!") || data.message_.StartsWith("%") || !configs.colorizeMessage)
                     Message.SendMessage(chatName + ": " + data.message_);
-                else Message.SendMessage(chatName + ": " + colorizeText(data.message_));
+                else Message.SendMessage(chatName + ": " + colorizeText(data.message_, false));
 
                 return false;
             }
@@ -96,7 +96,7 @@ namespace ColoredName
             public bool supSub;
         }
 
-        public static string colorizeText(string name)
+        public static string colorizeText(string name, bool useFormating = true)
         {
             FormatFlags flags = new FormatFlags(rnd);
 
@@ -105,27 +105,27 @@ namespace ColoredName
             float t1 = (float)rnd.NextDouble();
             float t2 = t1 + rnd.Next(2) >= 1 ? size : -size;
             string newName = "";
-            if (flags.bold) newName += "[b]";
-            if (flags.sup) newName += "[sup]";
-            if (flags.sub) newName += "[sub]";
-            if (flags.italic) newName += "[i]";
-            if (flags.strike) newName += "[s]";
-            if (flags.underlined) newName += "[u]";
+            if (flags.bold && useFormating) newName += "[b]";
+            if (flags.sup && useFormating) newName += "[sup]";
+            if (flags.sub && useFormating) newName += "[sub]";
+            if (flags.italic && useFormating) newName += "[i]";
+            if (flags.strike && useFormating) newName += "[s]";
+            if (flags.underlined && useFormating) newName += "[u]";
             for (int i = 0; i < name.Length; i++)
             {
                 float value = ((t2 - t1) / name.Length) * i + t1;
                 while (value < 0) value++;
                 while (value > 1) value--;
-                if (flags.supSub) newName += i % 2 == 0 ? "[sub]" : "[sup]";
+                if (flags.supSub && useFormating) newName += i % 2 == 0 ? "[sub]" : "[sup]";
                 newName += "[" + ColorEx.ColorToHexNGUI(new ColorHSB(value, 1.0f, 1.0f, 1f).ToColor()) + "]" + name[i] + "[-]";
-                if (flags.supSub) newName += i % 2 == 0 ? "[/sub]" : "[/sup]";
+                if (flags.supSub && useFormating) newName += i % 2 == 0 ? "[/sub]" : "[/sup]";
             }
-            if (flags.underlined) newName += "[/u]";
-            if (flags.strike) newName += "[/s]";
-            if (flags.italic) newName += "[/i]";
-            if (flags.sub) newName += "[/sub]";
-            if (flags.sup) newName += "[/sup]";
-            if (flags.bold) newName += "[/b]";
+            if (flags.underlined && useFormating) newName += "[/u]";
+            if (flags.strike && useFormating) newName += "[/s]";
+            if (flags.italic && useFormating) newName += "[/i]";
+            if (flags.sub && useFormating) newName += "[/sub]";
+            if (flags.sup && useFormating) newName += "[/sup]";
+            if (flags.bold && useFormating) newName += "[/b]";
 
             return newName;
         }
