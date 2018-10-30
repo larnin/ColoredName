@@ -61,11 +61,24 @@ namespace ColoredName
         {
             static bool Prefix(ClientLogic __instance, ChatSubmitMessage.Data data)
             {
+                if (data.message_.StartsWith("!") || data.message_.StartsWith("%") || data.message_.StartsWith("/"))
+                    return true;
+
                 var chatName = __instance.GetType().GetMethod("GetClientChatName", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, new object[] { }) as string;
                 if (configs.colorizeName)
                     chatName = colorizeText(NGUIText.StripSymbols(chatName));
+                if (data.message_ == "/colorizer")
+                {
+                    configs.colorizeMessage = !configs.colorizeMessage;
+                    return false;
+                }
+                if (data.message_ == "/coloriname")
+                {
+                    configs.colorizeName = !configs.colorizeName;
+                    return false;
+                }
 
-                if(data.message_.StartsWith("!") || data.message_.StartsWith("%") || !configs.colorizeMessage)
+                if (!configs.colorizeMessage)
                     Message.SendMessage(chatName + ": " + data.message_);
                 else Message.SendMessage(chatName + ": " + colorizeText(data.message_, false));
 
